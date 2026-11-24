@@ -3,763 +3,1325 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gift Verification Survey</title>
+  <title>Prime Spin Vault - Exclusive Rewards</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg-dark: #0b0f19;
-      --card-bg: rgba(20, 27, 45, 0.88);
-      --card-border: rgba(255, 255, 255, 0.1);
-      --primary: #7c3aed;
-      --primary-hover: #6d28d9;
-      --accent: #ec4899;
-      --success: #10b981;
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
+      --bg-deep: #06080d;
+      --bg-surface: #0d111a;
+      --bg-card: rgba(16, 21, 33, 0.85);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-gold: rgba(212, 175, 55, 0.35);
+      --gold-100: #fff3c4;
+      --gold-300: #f3d06b;
+      --gold-500: #d4af37;
+      --gold-700: #9a781c;
+      --text-primary: #f5f7fa;
+      --text-secondary: #98a2b3;
+      --text-muted: #667085;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-display: 'Cinzel', Georgia, serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      min-height: 100vh;
-      background: radial-gradient(circle at top left, #1e1b4b, transparent 45%),
-                  radial-gradient(circle at bottom right, #3b0764, transparent 45%),
-                  var(--bg-dark);
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+    html, body {
+      min-height: 100%;
+      background-color: var(--bg-deep);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
 
-    .container {
+    .ambient-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(212, 175, 55, 0.11) 0%, transparent 45%),
+        radial-gradient(circle at 82% 80%, rgba(56, 103, 214, 0.12) 0%, transparent 45%),
+        linear-gradient(180deg, #06080d 0%, #0a0e17 100%);
+    }
+
+    .ambient-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      animation: floatOrb 12s ease-in-out infinite alternate;
+    }
+    .orb-1 { width: 340px; height: 340px; background: rgba(212, 175, 55, 0.16); top: -80px; right: 10%; }
+    .orb-2 { width: 380px; height: 380px; background: rgba(38, 70, 145, 0.22); bottom: -100px; left: 5%; animation-delay: -6s; }
+
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(24px, 32px) scale(1.08); }
+    }
+
+    .app-shell {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 40px;
+    }
+
+    .topbar {
+      width: 100%;
+      max-width: 960px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 14px 20px;
+      margin-bottom: 32px;
+      background: rgba(13, 17, 26, 0.72);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      backdrop-filter: blur(14px);
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--gold-300), var(--gold-700));
+      display: grid;
+      place-items: center;
+      color: #090b10;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .brand-mark img { width: 100%; height: 100%; object-fit: cover; }
+
+    .brand-text { display: flex; flex-direction: column; }
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--gold-100);
+    }
+    .brand-sub { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); }
+
+    .user-pill {
+      display: none;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(212, 175, 55, 0.08);
+      border: 1px solid var(--border-gold);
+      font-size: 12px;
+      color: var(--gold-100);
+      max-width: 100%;
+      min-width: 0;
+    }
+    .user-pill.visible { display: inline-flex; animation: fadeSlideIn 0.4s ease forwards; }
+
+    .user-pill-uid {
+      flex-shrink: 0;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--gold-300);
+      white-space: nowrap;
+    }
+
+    .prime-card {
       width: 100%;
       max-width: 480px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .card {
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--card-border);
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
       border-radius: 24px;
-      padding: 32px 26px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      padding: 36px 28px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 243, 196, 0.14);
       position: relative;
       overflow: hidden;
     }
-
-    /* Header & Progress Bar */
-    .header-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
+    .prime-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 15%; right: 15%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-300), transparent);
     }
 
-    .badge {
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
+    #maintenance-screen, #blocked-screen, #loading-screen {
+      margin: auto 0;
+      animation: cardEntrance 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .hidden { display: none !important; }
+
+    .badge-prime {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.28);
+      color: var(--gold-300);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: #c4b5fd;
-      background: rgba(124, 58, 237, 0.2);
-      border: 1px solid rgba(124, 58, 237, 0.35);
-      padding: 4px 12px;
-      border-radius: 999px;
-    }
-
-    .step-counter {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .progress-track {
-      width: 100%;
-      height: 8px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 999px;
-      overflow: hidden;
-      margin-bottom: 28px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 20%;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      border-radius: 999px;
-      transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    /* Question Transition Animations */
-    .question-box {
-      animation: slideFadeIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    @keyframes slideFadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(16px) scale(0.98);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    .question-title {
-      font-size: 21px;
-      font-weight: 600;
-      line-height: 1.45;
-      margin-bottom: 8px;
-      color: #ffffff;
-    }
-
-    .question-sub {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 24px;
-    }
-
-    /* YES / NO Buttons */
-    .options-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-
-    .opt-btn {
-      padding: 15px 16px;
-      border-radius: 14px;
-      border: 1.5px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text-main);
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.25s ease;
-    }
-
-    .opt-btn:hover {
-      background: rgba(255, 255, 255, 0.09);
-      transform: translateY(-2px);
-    }
-
-    .opt-btn.selected-yes {
-      background: rgba(16, 185, 129, 0.16);
-      border-color: var(--success);
-      color: #6ee7b7;
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
-    }
-
-    .opt-btn.selected-no {
-      background: rgba(239, 68, 68, 0.16);
-      border-color: var(--danger);
-      color: #fca5a5;
-      box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
-    }
-
-    /* Password Field */
-    .password-wrapper {
-      display: none;
-      margin-top: 6px;
-      margin-bottom: 20px;
-      animation: slideFadeIn 0.3s ease;
-    }
-
-    .password-wrapper.active {
-      display: block;
-    }
-
-    .input-label {
-      display: block;
-      font-size: 13px;
-      font-weight: 500;
-      color: #cbd5e1;
-      margin-bottom: 8px;
-    }
-
-    .password-input {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 12px;
-      border: 1.5px solid rgba(255, 255, 255, 0.15);
-      background: rgba(15, 23, 42, 0.7);
-      color: #ffffff;
-      font-size: 15px;
-      outline: none;
-      transition: border-color 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .password-input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.25);
-    }
-
-    /* Alert / Error Message */
-    .alert-box {
-      display: none;
-      padding: 12px 14px;
-      border-radius: 12px;
-      font-size: 13.5px;
-      font-weight: 500;
       margin-bottom: 18px;
-      line-height: 1.45;
-      animation: shake 0.35s ease;
     }
 
-    .alert-box.show {
-      display: block;
-    }
-
-    .alert-error {
-      background: rgba(239, 68, 68, 0.14);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #fca5a5;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-6px); }
-      50% { transform: translateX(6px); }
-      75% { transform: translateX(-4px); }
-    }
-
-    /* Next Button */
-    .next-btn {
-      display: none;
-      width: 100%;
-      padding: 15px;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      color: #ffffff;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: 0 10px 25px -5px rgba(124, 58, 237, 0.45);
-      animation: slideFadeIn 0.3s ease;
-    }
-
-    .next-btn.show {
-      display: block;
-    }
-
-    .next-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 28px -5px rgba(236, 72, 153, 0.5);
-    }
-
-    .next-btn:active {
-      transform: translateY(0);
-    }
-
-    /* Lock Screen & Final Screen */
-    .state-screen {
-      display: none;
-      text-align: center;
-      animation: slideFadeIn 0.45s ease;
-    }
-
-    .state-screen.active {
-      display: block;
-    }
-
-    .icon-circle {
-      width: 78px;
-      height: 78px;
-      border-radius: 50%;
-      margin: 0 auto 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 34px;
-    }
-
-    .icon-lock {
-      background: rgba(239, 68, 68, 0.15);
-      border: 2px solid rgba(239, 68, 68, 0.4);
-      color: #f87171;
-    }
-
-    .icon-success {
-      background: rgba(16, 185, 129, 0.15);
-      border: 2px solid rgba(16, 185, 129, 0.45);
-      color: #34d399;
-      animation: pulseGlow 2s infinite;
-    }
-
-    @keyframes pulseGlow {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-      50% { box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); }
-    }
-
-    .state-title {
-      font-size: 24px;
+    .gate-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      line-height: 1.25;
       font-weight: 700;
+      color: var(--text-primary);
       margin-bottom: 10px;
     }
+    .gate-desc { font-size: 14px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 26px; }
 
-    .state-desc {
-      font-size: 14.5px;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 24px;
+    .btn-prime {
+      position: relative; width: 100%; height: 52px; border: none; border-radius: 12px;
+      background: linear-gradient(135deg, #f5d77a 0%, #d4af37 50%, #b58c24 100%);
+      color: #090b10; font-family: var(--font-sans); font-size: 15px; font-weight: 800;
+      letter-spacing: 0.04em; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      overflow: hidden; box-shadow: 0 10px 28px rgba(212, 175, 55, 0.28);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+    .btn-prime::after {
+      content: ""; position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+      transform: skewX(-20deg); transition: left 0.6s ease;
+    }
+    .btn-prime:hover:not(:disabled)::after { left: 140%; }
+    .btn-prime:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(212, 175, 55, 0.38); }
+    .btn-prime:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+    .btn-muted {
+      width: 100%; height: 46px; border: 1px solid var(--border-subtle); border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06); color: var(--text-primary);
+      font-family: var(--font-sans); font-size: 14px; font-weight: 700; cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .btn-muted:hover { background: rgba(255, 255, 255, 0.12); }
+
+    #wheel-stage {
+      display: none; width: 100%; max-width: 960px; flex-direction: column; align-items: center; gap: 28px;
+    }
+    #wheel-stage.active { display: flex; animation: cardEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+    .stage-header { text-align: center; max-width: 560px; }
+    .stage-title {
+      font-family: var(--font-display); font-size: 32px; font-weight: 700;
+      background: linear-gradient(135deg, #ffffff 0%, #f3d06b 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px;
+    }
+    .stage-sub { font-size: 14px; color: var(--text-secondary); line-height: 1.55; }
+
+    .wheel-layout {
+      width: 100%; display: grid; grid-template-columns: 1fr; gap: 28px; align-items: center; justify-items: center;
+    }
+    @media (min-width: 860px) {
+      .wheel-layout.has-summary { grid-template-columns: 1.05fr 0.95fr; align-items: start; }
     }
 
-    .timer-box {
-      display: inline-block;
-      padding: 14px 28px;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(239, 68, 68, 0.35);
+    .wheel-container-wrap { display: flex; flex-direction: column; align-items: center; gap: 24px; width: 100%; }
+    .wheel-frame { position: relative; width: min(88vw, 410px); height: min(88vw, 410px); display: grid; place-items: center; }
+
+    .wheel-halo {
+      position: absolute; inset: -14px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.22) 0%, transparent 70%);
+      filter: blur(18px); animation: pulseHalo 3.2s ease-in-out infinite; pointer-events: none;
+    }
+    @keyframes pulseHalo {
+      0%, 100% { opacity: 0.6; transform: scale(0.98); }
+      50% { opacity: 1; transform: scale(1.03); }
+    }
+
+    .wheel-bezel {
+      position: relative; width: 100%; height: 100%; border-radius: 50%; padding: 14px;
+      background: linear-gradient(145deg, #2b3245, #0e121b);
+      border: 2px solid rgba(212, 175, 55, 0.65);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), inset 0 0 22px rgba(212, 175, 55, 0.2);
+    }
+
+    .rim-lights { position: absolute; inset: 0; pointer-events: none; z-index: 4; }
+    .rim-bulb {
+      position: absolute; width: 7px; height: 7px; border-radius: 50%; background: #fff3c4;
+      box-shadow: 0 0 8px rgba(243, 208, 107, 0.9); top: 50%; left: 50%; transform-origin: center;
+      opacity: 0.45; transition: opacity 0.15s ease;
+    }
+    .rim-bulb.lit { opacity: 1; background: #ffffff; box-shadow: 0 0 12px #f3d06b, 0 0 22px rgba(212, 175, 55, 0.8); }
+
+    #wheel-canvas { width: 100%; height: 100%; display: block; border-radius: 50%; }
+
+    .wheel-pointer {
+      position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+      transform-origin: 50% 8px; z-index: 10;
+      filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.65));
+      transition: transform 0.08s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .wheel-pointer.tick { transform: translateX(-50%) rotate(-16deg); }
+
+    .wheel-hub {
+      position: absolute; width: 72px; height: 72px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #fff2c2 0%, #d4af37 55%, #7c5e10 100%);
+      border: 3px solid #090c12;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.7);
+      display: grid; place-items: center; z-index: 8; pointer-events: none;
+    }
+    .wheel-hub-inner {
+      width: 52px; height: 52px; border-radius: 50%; background: #0b0f18;
+      border: 1px solid rgba(243, 208, 107, 0.55); display: grid; place-items: center;
+      font-family: var(--font-display); font-size: 10px; font-weight: 800; letter-spacing: 0.14em; color: var(--gold-300);
+    }
+
+    .spin-controls { width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .spin-status { font-size: 12.5px; color: var(--text-secondary); text-align: center; min-height: 18px; }
+    .spin-quota-chip {
+      font-family: var(--font-mono); font-size: 11.5px; padding: 5px 12px; border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-subtle); color: var(--gold-100);
+    }
+
+    #post-spin-panel { display: none; width: 100%; max-width: 460px; padding: 28px 24px; }
+    #post-spin-panel.visible { display: block; animation: fadeSlideIn 0.5s ease forwards; }
+
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 100; background: rgba(3, 5, 10, 0.82); backdrop-filter: blur(10px);
+      display: none; align-items: center; justify-content: center; padding: 18px; overflow-y: auto;
+    }
+    .modal-backdrop.open { display: flex; animation: fadeIn 0.3s ease forwards; }
+
+    .modal-card {
+      position: relative; width: 100%; max-width: 500px;
+      background: linear-gradient(180deg, #121826 0%, #0b0f18 100%);
+      border: 1px solid rgba(212, 175, 55, 0.45); border-radius: 24px; padding: 30px 24px 24px;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.85), 0 0 60px rgba(212, 175, 55, 0.12);
+      transform: scale(0.9) translateY(16px); opacity: 0;
+      animation: modalPop 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      max-height: 92vh; overflow-y: auto;
+    }
+    @keyframes modalPop { to { transform: scale(1) translateY(0); opacity: 1; } }
+
+    .modal-close {
+      position: absolute; top: 16px; right: 16px; width: 34px; height: 34px; border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-subtle);
+      color: var(--text-secondary); display: grid; place-items: center; cursor: pointer;
+    }
+    .modal-close:hover { background: rgba(255, 255, 255, 0.12); color: var(--text-primary); }
+
+    .win-header { text-align: center; margin-bottom: 22px; }
+    .win-emblem {
+      width: 58px; height: 58px; margin: 0 auto 14px; border-radius: 16px;
+      background: linear-gradient(135deg, rgba(243, 208, 107, 0.22), rgba(212, 175, 55, 0.06));
+      border: 1px solid rgba(212, 175, 55, 0.45); display: grid; place-items: center; color: var(--gold-300);
+      box-shadow: 0 0 28px rgba(212, 175, 55, 0.22);
+    }
+    .win-emblem.bad-luck {
+      background: rgba(249, 112, 102, 0.12);
+      border-color: rgba(249, 112, 102, 0.38);
+      color: #ff7a70;
+      box-shadow: 0 0 24px rgba(249, 112, 102, 0.18);
+    }
+    .win-title { font-family: var(--font-display); font-size: 23px; font-weight: 700; color: var(--gold-100); margin-bottom: 8px; }
+    .win-title.bad-luck { color: #fda29b; }
+    .win-amount-box {
+      display: inline-flex; align-items: baseline; gap: 6px; padding: 8px 22px; border-radius: 14px;
+      background: rgba(212, 175, 55, 0.12); border: 1px solid rgba(212, 175, 55, 0.38);
+      font-size: 34px; font-weight: 800; color: var(--gold-300); text-shadow: 0 0 18px rgba(212, 175, 55, 0.35);
+    }
+    .win-amount-box.bad-luck {
+      background: rgba(249, 112, 102, 0.1);
+      border-color: rgba(249, 112, 102, 0.35);
+      color: #fda29b;
+      text-shadow: none;
+    }
+
+    .bad-luck-card {
+      background: rgba(249, 112, 102, 0.07);
+      border: 1px solid rgba(249, 112, 102, 0.25);
       border-radius: 16px;
-      font-size: 32px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: #fca5a5;
-      margin-bottom: 14px;
+      padding: 20px 18px;
+      text-align: center;
+    }
+    .bad-luck-text {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
     }
 
-    .unlock-btn {
-      display: inline-flex;
+    .redeem-box {
+      position: relative; background: linear-gradient(160deg, rgba(16, 22, 36, 0.92) 0%, rgba(8, 11, 18, 0.96) 100%);
+      border: 1px solid rgba(212, 175, 55, 0.32); border-radius: 18px; padding: 18px; margin-bottom: 18px;
+    }
+    .redeem-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+    .redeem-label {
+      display: inline-flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold-100);
+    }
+    .lock-badge {
+      display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px;
+      background: rgba(247, 144, 9, 0.12); border: 1px solid rgba(247, 144, 9, 0.38);
+      color: #fdb022; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .code-vault-bar {
+      position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 13px 14px; border-radius: 12px; background: rgba(5, 8, 14, 0.9);
+      border: 1px dashed rgba(212, 175, 55, 0.28); margin-bottom: 12px; overflow: hidden;
+    }
+    .masked-code {
+      font-family: var(--font-mono); font-size: 14px; font-weight: 700; letter-spacing: 0.14em;
+      color: var(--text-muted); filter: blur(4px); user-select: none;
+    }
+    .vault-shield {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: rgba(247, 144, 9, 0.12); border: 1px solid rgba(247, 144, 9, 0.3);
+      color: #fdb022; display: grid; place-items: center; flex-shrink: 0;
+    }
+    .manual-note { display: flex; align-items: flex-start; gap: 9px; font-size: 12.5px; line-height: 1.55; color: var(--text-secondary); }
+
+    .task-card {
+      background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-subtle);
+      border-radius: 16px; padding: 16px; margin-bottom: 4px;
+    }
+    .task-heading { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--gold-100); margin-bottom: 12px; }
+    .task-steps { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .task-steps li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; line-height: 1.5; color: var(--text-secondary); }
+    .step-num {
+      width: 20px; height: 20px; border-radius: 6px;
+      background: rgba(212, 175, 55, 0.16); border: 1px solid rgba(212, 175, 55, 0.35);
+      color: var(--gold-300); font-size: 11px; font-weight: 700; display: grid; place-items: center; flex-shrink: 0; margin-top: 1px;
+    }
+
+    .form-link-row {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 8px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+    }
+    .form-anchor {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 16px; border-radius: 9px;
+      background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.35);
+      color: var(--gold-300); font-size: 12.5px; font-weight: 700; text-decoration: none;
+    }
+    .form-anchor:hover { background: rgba(212, 175, 55, 0.18); border-color: var(--gold-300); }
+
+    /* Support Footer */
+    .support-footer {
+      width: 100%;
+      max-width: 960px;
+      margin-top: auto;
+      padding-top: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-align: center;
+    }
+    .support-links {
+      display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      width: 100%;
-      padding: 16px 24px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: #ffffff;
-      font-size: 16px;
-      font-weight: 700;
+      flex-wrap: wrap;
+    }
+    .support-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 13px;
+      border-radius: 999px;
+      background: rgba(13, 17, 26, 0.8);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
       text-decoration: none;
-      letter-spacing: 0.5px;
-      box-shadow: 0 12px 26px -6px rgba(16, 185, 129, 0.5);
-      transition: all 0.25s ease;
+      transition: border-color 0.2s ease, color 0.2s ease;
     }
+    .support-chip:hover { border-color: var(--border-gold); color: var(--gold-100); }
 
-    .unlock-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 16px 32px -6px rgba(16, 185, 129, 0.65);
-    }
+    #celebration-canvas { position: fixed; inset: 0; z-index: 105; pointer-events: none; }
 
-    /* Confetti Canvas */
-    #confetti-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .hidden {
-      display: none !important;
-    }
+    @keyframes cardEntrance { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   </style>
 </head>
 <body>
-  <canvas id="confetti-canvas"></canvas>
+  <div class="ambient-bg">
+    <div class="ambient-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
 
-  <div class="container">
-    <div class="card">
-      <!-- Survey Section -->
-      <div id="survey-section">
-        <div class="header-meta">
-          <span class="badge">Gift Verification</span>
-          <span class="step-counter" id="step-counter">1/5</span>
+  <canvas id="celebration-canvas"></canvas>
+
+  <main class="app-shell">
+    <!-- Top Header -->
+    <header class="topbar">
+      <div class="brand">
+        <div id="brand-mark" class="brand-mark" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
         </div>
-
-        <div class="progress-track">
-          <div class="progress-fill" id="progress-fill"></div>
-        </div>
-
-        <div id="question-container" class="question-box">
-          <h2 class="question-title" id="question-text"></h2>
-          <p class="question-sub">Aage badhne ke liye sahi jawaab select karein.</p>
-
-          <div class="options-grid">
-            <button type="button" class="opt-btn" id="btn-yes" onclick="selectAnswer('YES')">
-              <span>✓</span> YES
-            </button>
-            <button type="button" class="opt-btn" id="btn-no" onclick="selectAnswer('NO')">
-              <span>✕</span> NO
-            </button>
-          </div>
-
-          <div class="password-wrapper" id="password-wrapper">
-            <label class="input-label" id="password-label" for="password-input"></label>
-            <input
-              type="password"
-              id="password-input"
-              class="password-input"
-              placeholder="Yahan password likhein..."
-              autocomplete="off"
-            />
-          </div>
-
-          <div class="alert-box alert-error" id="error-box"></div>
-
-          <button type="button" class="next-btn" id="next-btn" onclick="handleNext()">
-            NEXT →
-          </button>
+        <div class="brand-text">
+          <span id="brand-title" class="brand-title">PRIME SPIN</span>
+          <span id="brand-sub" class="brand-sub">Verified Reward Vault</span>
         </div>
       </div>
 
-      <!-- Lock Screen (10 Minutes) -->
-      <div id="lock-screen" class="state-screen">
-        <div class="icon-circle icon-lock">🔒</div>
-        <h2 class="state-title">Account Temporarily Locked!</h2>
-        <p class="state-desc">
-          Aapne 2 baar galat password daala hai. Security ke liye yeh page 10 minute ke liye lock kar diya gaya hai.
-        </p>
-        <div class="timer-box" id="countdown-timer">10:00</div>
-        <p class="question-sub" style="margin-bottom: 0;">Timer khatam hone ke baad aap dobara try kar sakte hain.</p>
+      <div id="user-pill" class="user-pill" title="User ID">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+        <span id="user-pill-uid" class="user-pill-uid"></span>
+      </div>
+    </header>
+
+    <!-- Loading Card -->
+    <section id="loading-screen" class="prime-card" style="text-align:center;">
+      <div class="badge-prime">Connecting to Vault</div>
+      <h1 class="gate-title" style="font-size:22px;">Synchronizing Prime Spin...</h1>
+      <p class="gate-desc" style="margin-bottom:0;">Loading live rewards, offers, and account status.</p>
+    </section>
+
+    <!-- Maintenance Screen -->
+    <section id="maintenance-screen" class="prime-card hidden" style="text-align:center;">
+      <div class="badge-prime" style="color:#fdb022; border-color:rgba(247,144,9,0.4);">Scheduled Maintenance</div>
+      <h1 class="gate-title">Vault Temporarily Offline</h1>
+      <p class="gate-desc" style="margin-bottom:0;">
+        We are upgrading the Prime Spin system to serve you better. Please check back shortly or reach out via our official channels below.
+      </p>
+    </section>
+
+    <!-- Blocked User Screen -->
+    <section id="blocked-screen" class="prime-card hidden" style="text-align:center;">
+      <div class="badge-prime" style="color:#ff7a70; border-color:rgba(255,122,112,0.4);">Access Restricted</div>
+      <h1 class="gate-title">Account Blocked</h1>
+      <p class="gate-desc" style="margin-bottom:0;">
+        Your account has been suspended by an administrator. If you believe this is a mistake, please reach out via our official channels below.
+      </p>
+    </section>
+
+    <!-- Spin Wheel Stage -->
+    <section id="wheel-stage" aria-label="Spin Wheel Stage">
+      <div class="stage-header">
+        <h2 class="stage-title">Prime Fortune Wheel</h2>
+        <p class="stage-sub">Spin the wheel to win instant rewards. Complete the assigned offer first, then fill out the Google Form for manual verification.</p>
       </div>
 
-      <!-- Final Congratulations Screen -->
-      <div id="final-screen" class="state-screen">
-        <div class="icon-circle icon-success">🎁</div>
-        <h2 class="state-title">Congratulations! 🎉</h2>
-        <p class="state-desc">
-          Shabash! Aapne sabhi steps aur verification successfully complete kar liye hain. Ab aap apna special gift unlock kar sakte hain!
-        </p>
-        <a
-          href="https://indian-ero.github.io/Gift-/"
-          class="unlock-btn"
-          id="unlock-btn"
-        >
-          UNLOCK GIFT 🎁
-        </a>
+      <div id="wheel-layout" class="wheel-layout">
+        <div class="wheel-container-wrap">
+          <div class="wheel-frame">
+            <div class="wheel-halo"></div>
+
+            <div id="wheel-pointer" class="wheel-pointer" aria-hidden="true">
+              <svg width="38" height="46" viewBox="0 0 38 46" fill="none">
+                <defs>
+                  <linearGradient id="ptrGrad" x1="0" y1="0" x2="38" y2="46" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#FFF3C4" /><stop offset="50%" stop-color="#D4AF37" /><stop offset="100%" stop-color="#8A6712" />
+                  </linearGradient>
+                </defs>
+                <path d="M19 45L3.5 13C1.2 8.2 4.7 2 10 2H28C33.3 2 36.8 8.2 34.5 13L19 45Z" fill="url(#ptrGrad)" stroke="#090C12" stroke-width="2.5" />
+                <circle cx="19" cy="12" r="4.5" fill="#090C12" stroke="#FFF3C4" stroke-width="1.5" />
+              </svg>
+            </div>
+
+            <div class="wheel-bezel">
+              <div id="rim-lights" class="rim-lights" aria-hidden="true"></div>
+              <canvas id="wheel-canvas" width="760" height="760"></canvas>
+            </div>
+
+            <div class="wheel-hub" aria-hidden="true">
+              <div class="wheel-hub-inner">PRIME</div>
+            </div>
+          </div>
+
+          <div class="spin-controls">
+            <div id="spin-quota-chip" class="spin-quota-chip">Daily Spins Remaining: --</div>
+            <button id="spin-btn" type="button" class="btn-prime">
+              <span>SPIN NOW</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" />
+              </svg>
+            </button>
+            <div id="spin-status" class="spin-status">Ready to spin</div>
+          </div>
+        </div>
+
+        <aside id="post-spin-panel" class="prime-card" aria-label="Reward Summary">
+          <div class="win-header" style="margin-bottom:16px;">
+            <div id="panel-win-title" class="win-title" style="font-size:20px;">Congratulations! You Won</div>
+            <div id="panel-won-amount" class="win-amount-box" style="font-size:28px;">₹0</div>
+          </div>
+          <div id="panel-content-slot"></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Support Footer -->
+    <footer class="support-footer">
+      <div class="support-links">
+        <a id="footer-ig" href="https://www.instagram.com/indian_ero?avpt=MXRlODlya2FnbmgwdA==" target="_blank" rel="noopener noreferrer" class="support-chip">Instagram Support</a>
+        <a id="footer-wa" href="https://whatsapp.com/channel/0029VbDdRyUGJP8A1G2LiZ45" target="_blank" rel="noopener noreferrer" class="support-chip">WhatsApp Channel</a>
+        <a id="footer-tg" href="https://t.me/indian_ero" target="_blank" rel="noopener noreferrer" class="support-chip">Telegram Channel</a>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Custom Popup Modal -->
+  <div id="win-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-win-title">
+    <div class="modal-card">
+      <button id="modal-close-btn" class="modal-close" type="button" aria-label="Close popup">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+
+      <div class="win-header">
+        <div id="modal-win-emblem" class="win-emblem" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" /><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" /><path d="M4 22h16" />
+            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" /><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+          </svg>
+        </div>
+        <h3 id="modal-win-title" class="win-title">Congratulations! You Won</h3>
+        <div id="modal-won-amount" class="win-amount-box">₹0</div>
+      </div>
+
+      <div id="outcome-body-slot">
+        <!-- Shown when Prize > 0 -->
+        <div id="reward-workflow-block">
+          <div class="redeem-box">
+            <div class="redeem-top">
+              <span class="redeem-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
+                </svg>
+                <span>Redeem Code</span>
+              </span>
+              <span class="lock-badge">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                <span>LOCKED</span>
+              </span>
+            </div>
+
+            <div class="code-vault-bar">
+              <span class="masked-code" aria-hidden="true">PRM-8492-X7Q9-VAULT</span>
+              <div class="vault-shield" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="manual-note">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F3D06B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:2px;">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              <span>This code stays locked here. Complete the offer and submit the Google Form to receive your reward manually.</span>
+            </div>
+          </div>
+
+          <div class="task-card">
+            <div class="task-heading">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+              </svg>
+              <span>Task Instructions:</span>
+            </div>
+
+            <ol id="task-steps-list" class="task-steps">
+              <li><span class="step-num">1</span><span>Click <strong>Continue</strong> below to open and complete the required offer.</span></li>
+              <li><span class="step-num">2</span><span>After completing the offer, open the <strong>Google Form</strong> link below and submit your details.</span></li>
+              <li><span class="step-num">3</span><span>The Redeem Code remains locked here because your reward will be given manually after reviewing your Google Form submission.</span></li>
+            </ol>
+
+            <button id="continue-btn" type="button" class="btn-prime" style="height:48px; font-size:15px;">
+              <span>Continue</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+              </svg>
+            </button>
+
+            <div class="form-link-row">
+              <span>Offer completed?</span>
+              <a id="google-form-link" href="#" class="form-anchor" target="_blank" rel="noopener noreferrer">
+                <span>Open Google Form</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shown when Prize is 0 (Bad Luck, NO Offer) -->
+        <div id="bad-luck-block" class="bad-luck-card hidden">
+          <p class="bad-luck-text">
+            Better luck next time! You landed on <strong>₹0</strong> this spin, so no reward or offer is available for this spin.
+          </p>
+          <button id="bad-luck-close-btn" type="button" class="btn-muted">Close</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <script>
-    // ==========================================
-    // CONFIGURATION (Yahan apne passwords change karein)
-    // ==========================================
-    const CONFIG = {
-      commentPassword: "123456", // Question 3 (Comment) ka password
-      videoPassword: "12456",     // Question 5 (Video) ka password
-      maxWrongAttempts: 2,
-      lockDurationMs: 10 * 60 * 1000, // 10 minutes
-      storageLockKey: "gift_survey_lock_until",
-      storageAttemptsKey: "gift_survey_wrong_attempts"
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import {
+      getDatabase, ref, onValue, get, set, update, push, runTransaction
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVdCuOmNqUMgYesMNSiBRLtBJZvQCzKBM",
+      authDomain: "primespin-f916c.firebaseapp.com",
+      databaseURL: "https://primespin-f916c-default-rtdb.firebaseio.com",
+      projectId: "primespin-f916c",
+      storageBucket: "primespin-f916c.firebasestorage.app",
+      messagingSenderId: "568773301234",
+      appId: "1:568773301234:web:bd1bb4b83d0b9e46b1916b"
     };
 
-    const QUESTIONS = [
-      {
-        text: "Kya tumne mera Instagram account Follow kiya?",
-        requiresPassword: false
-      },
-      {
-        text: "Kya tumne meri latest video Like ki?",
-        requiresPassword: false
-      },
-      {
-        text: "Kya tumne video par Comment kiya?",
-        requiresPassword: true,
-        passwordType: "comment",
-        passwordLabel: "Comment Password daalein:",
-        wrongMessage: "Comment Password Galat Hai!"
-      },
-      {
-        text: "Kya tumne video Share ki?",
-        requiresPassword: false
-      },
-      {
-        text: "Kya tumne poori video dekhi?",
-        requiresPassword: true,
-        passwordType: "video",
-        passwordLabel: "Video Password daalein:",
-        wrongMessage: "Video Password Galat Hai!"
-      }
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const DEFAULT_PRIZES = [
+      { id: "p0", label: "₹0",   amount: 0,   weight: 4,  enabled: true, winLimit: 0, wonCount: 0, bg: "#141926", text: "#98A2B3" },
+      { id: "p1", label: "₹1",   amount: 1,   weight: 22, enabled: true, winLimit: 0, wonCount: 0, bg: "#1D2538", text: "#F5F7FA" },
+      { id: "p2", label: "₹2",   amount: 2,   weight: 20, enabled: true, winLimit: 0, wonCount: 0, bg: "#C59A2B", text: "#090C12" },
+      { id: "p3", label: "₹5",   amount: 5,   weight: 22, enabled: true, winLimit: 0, wonCount: 0, bg: "#141926", text: "#F3D06B" },
+      { id: "p4", label: "₹10",  amount: 10,  weight: 16, enabled: true, winLimit: 0, wonCount: 0, bg: "#1D2538", text: "#F5F7FA" },
+      { id: "p5", label: "₹25",  amount: 25,  weight: 9,  enabled: true, winLimit: 0, wonCount: 0, bg: "#D4AF37", text: "#090C12" },
+      { id: "p6", label: "₹50",  amount: 50,  weight: 5,  enabled: true, winLimit: 0, wonCount: 0, bg: "#141926", text: "#F3D06B" },
+      { id: "p7", label: "₹100", amount: 100, weight: 2,  enabled: true, winLimit: 0, wonCount: 0, bg: "#8C6812", text: "#FFF3C4" }
     ];
 
-    let currentStep = 0;
-    let selectedOption = null;
-    let lockInterval = null;
+    const DEFAULT_WEBSITE_SETTINGS = {
+      title: "PRIME SPIN",
+      subtitle: "Verified Reward Vault",
+      logoUrl: "",
+      emailGateEnabled: false,
+      maintenanceMode: false,
+      instagramUrl: "https://www.instagram.com/indian_ero?avpt=MXRlODlya2FnbmgwdA==",
+      whatsappUrl: "https://whatsapp.com/channel/0029VbDdRyUGJP8A1G2LiZ45",
+      telegramUrl: "https://t.me/indian_ero"
+    };
 
-    // DOM Elements
-    const surveySection = document.getElementById("survey-section");
-    const lockScreen = document.getElementById("lock-screen");
-    const finalScreen = document.getElementById("final-screen");
-    const stepCounter = document.getElementById("step-counter");
-    const progressFill = document.getElementById("progress-fill");
-    const questionContainer = document.getElementById("question-container");
-    const questionText = document.getElementById("question-text");
-    const btnYes = document.getElementById("btn-yes");
-    const btnNo = document.getElementById("btn-no");
-    const passwordWrapper = document.getElementById("password-wrapper");
-    const passwordLabel = document.getElementById("password-label");
-    const passwordInput = document.getElementById("password-input");
-    const errorBox = document.getElementById("error-box");
-    const nextBtn = document.getElementById("next-btn");
-    const countdownTimer = document.getElementById("countdown-timer");
+    const DEFAULT_TASK_STEPS = [
+      'Click <strong>Continue</strong> below to open and complete the required offer.',
+      'After completing the offer, open the <strong>Google Form</strong> link below and submit your details.',
+      'The Redeem Code remains locked here because your reward will be given manually after reviewing your Google Form submission.'
+    ];
 
-    // Safe localStorage helpers
-    function getStorage(key) {
-      try { return localStorage.getItem(key); } catch (e) { return null; }
-    }
-    function setStorage(key, value) {
-      try { localStorage.setItem(key, String(value)); } catch (e) {}
-    }
-    function removeStorage(key) {
-      try { localStorage.removeItem(key); } catch (e) {}
+    const TROPHY_SVG = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>`;
+    const SAD_SVG = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>`;
+
+    let websiteSettings = { ...DEFAULT_WEBSITE_SETTINGS };
+    let dailySpinLimit = 1;
+    let allPrizes = [...DEFAULT_PRIZES];
+    let enabledPrizes = [...DEFAULT_PRIZES];
+    let offersMap = {};
+    let currentUser = null;
+    let currentUserId = null;
+    let userUnsub = null;
+    let isSpinning = false;
+    let currentRotation = 0;
+
+    const loadingScreen = document.getElementById("loading-screen");
+    const maintenanceScreen = document.getElementById("maintenance-screen");
+    const blockedScreen = document.getElementById("blocked-screen");
+    const wheelStage = document.getElementById("wheel-stage");
+
+    const brandMark = document.getElementById("brand-mark");
+    const brandTitle = document.getElementById("brand-title");
+    const brandSub = document.getElementById("brand-sub");
+    const userPill = document.getElementById("user-pill");
+    const userPillUid = document.getElementById("user-pill-uid");
+
+    const footerIg = document.getElementById("footer-ig");
+    const footerWa = document.getElementById("footer-wa");
+    const footerTg = document.getElementById("footer-tg");
+
+    const wheelLayout = document.getElementById("wheel-layout");
+    const wheelCanvas = document.getElementById("wheel-canvas");
+    const ctx = wheelCanvas.getContext("2d");
+    const wheelPointer = document.getElementById("wheel-pointer");
+    const rimLights = document.getElementById("rim-lights");
+    const spinBtn = document.getElementById("spin-btn");
+    const spinStatus = document.getElementById("spin-status");
+    const spinQuotaChip = document.getElementById("spin-quota-chip");
+
+    const taskStepsList = document.getElementById("task-steps-list");
+
+    const winModal = document.getElementById("win-modal");
+    const modalCloseBtn = document.getElementById("modal-close-btn");
+    const modalWinEmblem = document.getElementById("modal-win-emblem");
+    const modalWinTitle = document.getElementById("modal-win-title");
+    const modalWonAmount = document.getElementById("modal-won-amount");
+    const postSpinPanel = document.getElementById("post-spin-panel");
+    const panelWinTitle = document.getElementById("panel-win-title");
+    const panelWonAmount = document.getElementById("panel-won-amount");
+    const panelContentSlot = document.getElementById("panel-content-slot");
+    const outcomeBodySlot = document.getElementById("outcome-body-slot");
+    const rewardWorkflowBlock = document.getElementById("reward-workflow-block");
+    const badLuckBlock = document.getElementById("bad-luck-block");
+    const badLuckCloseBtn = document.getElementById("bad-luck-close-btn");
+    const modalCard = winModal.querySelector(".modal-card");
+
+    const continueBtn = document.getElementById("continue-btn");
+    const googleFormLink = document.getElementById("google-form-link");
+
+    function escapeHtml(val) {
+      return String(val ?? "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
+      }[c]));
     }
 
-    // Initialize Page
-    function init() {
-      if (checkLockState()) {
+    function getTodayDateStr() {
+      const now = new Date();
+      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+    }
+
+    function generateUserId() {
+      return "USR-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+    }
+
+    const BULB_COUNT = 24;
+    const bulbs = [];
+    (function initRimBulbs() {
+      const radiusPct = 48.2;
+      for (let i = 0; i < BULB_COUNT; i++) {
+        const angle = (i / BULB_COUNT) * Math.PI * 2;
+        const bulb = document.createElement("span");
+        bulb.className = "rim-bulb";
+        bulb.style.left = (50 + radiusPct * Math.cos(angle)) + "%";
+        bulb.style.top = (50 + radiusPct * Math.sin(angle)) + "%";
+        bulb.style.transform = "translate(-50%, -50%)";
+        rimLights.appendChild(bulb);
+        bulbs.push(bulb);
+      }
+    })();
+
+    let bulbStep = 0;
+    setInterval(() => {
+      bulbStep = (bulbStep + 1) % BULB_COUNT;
+      bulbs.forEach((b, idx) => {
+        if (isSpinning) b.classList.toggle("lit", (idx - bulbStep + BULB_COUNT) % 3 === 0);
+        else b.classList.toggle("lit", idx % 2 === bulbStep % 2);
+      });
+    }, 140);
+
+    async function ensureBaseDefaults() {
+      const [webSnap, spinSnap] = await Promise.all([
+        get(ref(db, "settings/website")),
+        get(ref(db, "spinSettings"))
+      ]);
+      if (!webSnap.exists()) await set(ref(db, "settings/website"), DEFAULT_WEBSITE_SETTINGS);
+      if (!spinSnap.exists()) await set(ref(db, "spinSettings"), { dailySpinLimit: 1, prizes: DEFAULT_PRIZES });
+    }
+
+    function applyWebsiteSettings() {
+      document.title = `${websiteSettings.title || "Prime Spin"} - Exclusive Rewards`;
+      brandTitle.textContent = websiteSettings.title || "PRIME SPIN";
+      brandSub.textContent = websiteSettings.subtitle || "Verified Reward Vault";
+
+      footerIg.href = websiteSettings.instagramUrl || DEFAULT_WEBSITE_SETTINGS.instagramUrl;
+      footerWa.href = websiteSettings.whatsappUrl || DEFAULT_WEBSITE_SETTINGS.whatsappUrl;
+      footerTg.href = websiteSettings.telegramUrl || DEFAULT_WEBSITE_SETTINGS.telegramUrl;
+
+      if (websiteSettings.logoUrl && websiteSettings.logoUrl.trim() !== "") {
+        brandMark.innerHTML = "";
+        const img = document.createElement("img");
+        img.src = websiteSettings.logoUrl.trim();
+        img.alt = websiteSettings.title || "Logo";
+        img.onerror = () => {
+          brandMark.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+        };
+        brandMark.appendChild(img);
+      } else {
+        brandMark.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+      }
+      evaluateViewState();
+    }
+
+    function evaluateViewState() {
+      if (websiteSettings.maintenanceMode) {
+        loadingScreen.classList.add("hidden");
+        maintenanceScreen.classList.remove("hidden");
+        blockedScreen.classList.add("hidden");
+        wheelStage.classList.remove("active");
         return;
       }
-      renderQuestion();
+      maintenanceScreen.classList.add("hidden");
+
+      if (!currentUser) {
+        loadingScreen.classList.remove("hidden");
+        blockedScreen.classList.add("hidden");
+        wheelStage.classList.remove("active");
+        initUserSession();
+        return;
+      }
+
+      loadingScreen.classList.add("hidden");
+
+      if (currentUser.blocked) {
+        blockedScreen.classList.remove("hidden");
+        wheelStage.classList.remove("active");
+        return;
+      }
+      blockedScreen.classList.add("hidden");
+
+      wheelStage.classList.add("active");
+      drawWheel(currentRotation);
+      updateSpinControlsUI();
+      updateActiveOfferUI();
     }
 
-    // Enter key support on password field
-    passwordInput.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" && nextBtn.classList.contains("show")) {
-        handleNext();
+    let userInitInProgress = false;
+    async function initUserSession() {
+      if (userInitInProgress || currentUserId) return;
+      userInitInProgress = true;
+      try {
+        let uid = localStorage.getItem("prime_guest_uid");
+        if (!uid) {
+          uid = generateUserId();
+          localStorage.setItem("prime_guest_uid", uid);
+        }
+
+        const userRef = ref(db, `users/${uid}`);
+        const snap = await get(userRef);
+        if (!snap.exists()) {
+          const guestAlias = `${uid.toLowerCase()}@guest.primespin`;
+          await set(userRef, {
+            userId: uid,
+            email: guestAlias,
+            emailLower: guestAlias,
+            blocked: false,
+            dailySpinsUsed: 0,
+            lastSpinDate: getTodayDateStr(),
+            totalSpins: 0,
+            totalRewards: 0,
+            assignedOffers: {},
+            receivedOffers: {},
+            createdAt: Date.now()
+          });
+        }
+
+        subscribeToUser(uid);
+      } catch (err) {
+        console.error("Failed to initialize session:", err);
+      } finally {
+        userInitInProgress = false;
+      }
+    }
+
+    function subscribeToUser(userId) {
+      if (userUnsub) userUnsub();
+      currentUserId = userId;
+      userUnsub = onValue(ref(db, `users/${userId}`), (snap) => {
+        if (!snap.exists()) return;
+        currentUser = snap.val();
+
+        const today = getTodayDateStr();
+        if (currentUser.lastSpinDate !== today) {
+          update(ref(db, `users/${userId}`), { dailySpinsUsed: 0, lastSpinDate: today });
+          currentUser.dailySpinsUsed = 0;
+          currentUser.lastSpinDate = today;
+        }
+
+        userPillUid.textContent = currentUser.userId;
+        userPill.title = `User ID: ${currentUser.userId}`;
+        userPill.classList.add("visible");
+        evaluateViewState();
+      });
+    }
+
+    function getEffectiveOffer() {
+      if (currentUser && currentUser.assignedOffers) {
+        const assignedList = Object.values(currentUser.assignedOffers)
+          .sort((a, b) => (b.assignedAt || 0) - (a.assignedAt || 0));
+        for (const item of assignedList) {
+          const offer = offersMap[item.offerId];
+          if (offer && offer.active !== false) return offer;
+        }
+      }
+      const activeGlobal = Object.values(offersMap)
+        .filter(o => o && o.active !== false)
+        .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      return activeGlobal.length > 0 ? activeGlobal[0] : null;
+    }
+
+    function renderOfferInstructions(offer) {
+      const customLines = offer && offer.instructions
+        ? offer.instructions.split(/\r?\n/).map(s => s.trim()).filter(Boolean)
+        : [];
+
+      if (customLines.length > 0) {
+        taskStepsList.innerHTML = customLines.map((line, i) => `
+          <li><span class="step-num">${i + 1}</span><span>${escapeHtml(line)}</span></li>
+        `).join("");
+      } else {
+        taskStepsList.innerHTML = DEFAULT_TASK_STEPS.map((html, i) => `
+          <li><span class="step-num">${i + 1}</span><span>${html}</span></li>
+        `).join("");
+      }
+    }
+
+    function updateActiveOfferUI() {
+      const offer = getEffectiveOffer();
+      googleFormLink.href = (offer && offer.googleFormUrl && offer.googleFormUrl !== "#") ? offer.googleFormUrl : "#";
+      renderOfferInstructions(offer);
+    }
+
+    function getRemainingSpins() {
+      if (!currentUser) return 0;
+      const used = currentUser.lastSpinDate === getTodayDateStr() ? (currentUser.dailySpinsUsed || 0) : 0;
+      return Math.max(0, dailySpinLimit - used);
+    }
+
+    function updateSpinControlsUI() {
+      const remaining = getRemainingSpins();
+      spinQuotaChip.textContent = `Daily Spins Remaining: ${remaining} / ${dailySpinLimit}`;
+
+      if (isSpinning) return;
+
+      if (enabledPrizes.length < 2) {
+        spinBtn.disabled = true;
+        spinBtn.querySelector("span").textContent = "WHEEL UNAVAILABLE";
+        spinStatus.textContent = "Prizes are currently being updated by admin.";
+      } else if (remaining <= 0) {
+        spinBtn.disabled = true;
+        spinBtn.querySelector("span").textContent = "DAILY LIMIT REACHED";
+        spinStatus.textContent = "You have used all daily spins. Check back tomorrow or ask admin for reset.";
+      } else {
+        spinBtn.disabled = false;
+        spinBtn.querySelector("span").textContent = "SPIN NOW";
+        spinStatus.textContent = "Ready to spin!";
+      }
+    }
+
+    function drawWheel(rotation) {
+      const segments = enabledPrizes.length >= 2 ? enabledPrizes : DEFAULT_PRIZES;
+      const size = wheelCanvas.width;
+      const center = size / 2;
+      const radius = center - 6;
+      const arc = (Math.PI * 2) / segments.length;
+
+      ctx.clearRect(0, 0, size, size);
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(center, center, radius, 0, Math.PI * 2);
+      ctx.fillStyle = "#0B0F18";
+      ctx.fill();
+      ctx.restore();
+
+      for (let i = 0; i < segments.length; i++) {
+        const seg = segments[i];
+        const startAngle = rotation + i * arc - Math.PI / 2;
+        const endAngle = startAngle + arc;
+
+        ctx.beginPath();
+        ctx.moveTo(center, center);
+        ctx.arc(center, center, radius - 4, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fillStyle = seg.bg || (i % 2 === 0 ? "#141926" : "#1D2538");
+        ctx.fill();
+
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = "rgba(243, 208, 107, 0.45)";
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(center, center);
+        ctx.rotate(startAngle + arc / 2);
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = seg.text || "#F5F7FA";
+        const fontSize = segments.length > 10 ? 24 : 32;
+        ctx.font = `800 ${fontSize}px "Plus Jakarta Sans", sans-serif`;
+        ctx.fillText(seg.label, radius - 42, 0);
+        ctx.restore();
+      }
+
+      ctx.beginPath();
+      ctx.arc(center, center, radius - 4, 0, Math.PI * 2);
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = "#D4AF37";
+      ctx.stroke();
+    }
+
+    function pickEligibleSegmentIndex() {
+      const eligible = [];
+      enabledPrizes.forEach((p, idx) => {
+        const limit = Number(p.winLimit) || 0;
+        const won = Number(p.wonCount) || 0;
+        const weight = Math.max(0, Number(p.weight) || 0);
+        if (weight > 0 && (limit === 0 || won < limit)) eligible.push({ idx, weight });
+      });
+
+      if (eligible.length === 0) return -1;
+      const totalWeight = eligible.reduce((sum, item) => sum + item.weight, 0);
+      let r = Math.random() * totalWeight;
+      for (const item of eligible) {
+        r -= item.weight;
+        if (r <= 0) return item.idx;
+      }
+      return eligible[0].idx;
+    }
+
+    function easeOutQuint(t) { return 1 - Math.pow(1 - t, 5); }
+
+    spinBtn.addEventListener("click", () => {
+      if (isSpinning || !currentUser || currentUser.blocked || getRemainingSpins() <= 0) return;
+      const targetIndex = pickEligibleSegmentIndex();
+      if (targetIndex === -1) {
+        spinStatus.textContent = "All prize limits have been exhausted. Please try later.";
+        return;
+      }
+
+      isSpinning = true;
+      spinBtn.disabled = true;
+      spinStatus.textContent = "Spinning the Prime Wheel...";
+
+      const arc = (Math.PI * 2) / enabledPrizes.length;
+      const jitter = (Math.random() - 0.5) * arc * 0.5;
+      const desiredMod = ((Math.PI * 2) - ((targetIndex + 0.5) * arc) + jitter + Math.PI * 4) % (Math.PI * 2);
+      const currentMod = currentRotation % (Math.PI * 2);
+      const deltaMod = (desiredMod - currentMod + Math.PI * 2) % (Math.PI * 2);
+      const targetRotation = currentRotation + 7 * Math.PI * 2 + deltaMod;
+
+      const startRotation = currentRotation;
+      const duration = 5200;
+      const startTime = performance.now();
+      let lastSliceTick = Math.floor(startRotation / arc);
+      const chosenPrize = enabledPrizes[targetIndex];
+
+      function animateSpin(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        currentRotation = startRotation + (targetRotation - startRotation) * easeOutQuint(progress);
+        drawWheel(currentRotation);
+
+        const currentSliceTick = Math.floor(currentRotation / arc);
+        if (currentSliceTick !== lastSliceTick) {
+          lastSliceTick = currentSliceTick;
+          wheelPointer.classList.add("tick");
+          setTimeout(() => wheelPointer.classList.remove("tick"), 70);
+        }
+
+        if (progress < 1) requestAnimationFrame(animateSpin);
+        else { isSpinning = false; recordSpinOutcome(chosenPrize); }
+      }
+      requestAnimationFrame(animateSpin);
+    });
+
+    async function recordSpinOutcome(prize) {
+      const today = getTodayDateStr();
+      const amount = Number(prize.amount) || 0;
+      const isBadLuck = amount <= 0;
+      const activeOffer = !isBadLuck ? getEffectiveOffer() : null;
+
+      try {
+        await runTransaction(ref(db, `users/${currentUserId}`), (u) => {
+          if (!u) return u;
+          const usedToday = u.lastSpinDate === today ? (u.dailySpinsUsed || 0) : 0;
+          u.dailySpinsUsed = usedToday + 1;
+          u.lastSpinDate = today;
+          u.totalSpins = (u.totalSpins || 0) + 1;
+          u.totalRewards = (u.totalRewards || 0) + amount;
+          return u;
+        });
+
+        const prizeDbIdx = allPrizes.findIndex(p => p.id === prize.id);
+        if (prizeDbIdx !== -1) {
+          await runTransaction(ref(db, `spinSettings/prizes/${prizeDbIdx}/wonCount`), (cnt) => (cnt || 0) + 1);
+        }
+
+        await push(ref(db, "spins"), {
+          userId: currentUserId,
+          email: currentUser.email || "Guest",
+          prizeId: prize.id,
+          prizeLabel: prize.label,
+          amount,
+          offerId: activeOffer ? activeOffer.offerId : "NONE",
+          timestamp: Date.now()
+        });
+      } catch (err) {
+        console.error("Failed to persist spin:", err);
+      }
+
+      modalWonAmount.textContent = prize.label;
+      panelWonAmount.textContent = prize.label;
+
+      if (isBadLuck) {
+        spinStatus.innerHTML = `Spin completed! Result: <strong style="color:#ff7a70;">Bad Luck (${escapeHtml(prize.label)})</strong>`;
+        modalWinEmblem.innerHTML = SAD_SVG;
+        modalWinEmblem.classList.add("bad-luck");
+        modalWinTitle.textContent = "Bad Luck!";
+        modalWinTitle.classList.add("bad-luck");
+        modalWonAmount.classList.add("bad-luck");
+
+        panelWinTitle.textContent = "Bad Luck!";
+        panelWinTitle.classList.add("bad-luck");
+        panelWonAmount.classList.add("bad-luck");
+
+        rewardWorkflowBlock.classList.add("hidden");
+        badLuckBlock.classList.remove("hidden");
+      } else {
+        spinStatus.innerHTML = `Spin completed! Result: <strong style="color:var(--gold-300);">${escapeHtml(prize.label)}</strong>`;
+        modalWinEmblem.innerHTML = TROPHY_SVG;
+        modalWinEmblem.classList.remove("bad-luck");
+        modalWinTitle.textContent = "Congratulations! You Won";
+        modalWinTitle.classList.remove("bad-luck");
+        modalWonAmount.classList.remove("bad-luck");
+
+        panelWinTitle.textContent = "Congratulations! You Won";
+        panelWinTitle.classList.remove("bad-luck");
+        panelWonAmount.classList.remove("bad-luck");
+
+        rewardWorkflowBlock.classList.remove("hidden");
+        badLuckBlock.classList.add("hidden");
+        updateActiveOfferUI();
+        launchGoldenParticles();
+      }
+
+      updateSpinControlsUI();
+      openWinModal();
+    }
+
+    function openWinModal() {
+      if (outcomeBodySlot.parentElement !== modalCard) modalCard.appendChild(outcomeBodySlot);
+      winModal.classList.add("open");
+    }
+
+    function closeWinModal() {
+      winModal.classList.remove("open");
+      panelContentSlot.appendChild(outcomeBodySlot);
+      postSpinPanel.classList.add("visible");
+      wheelLayout.classList.add("has-summary");
+    }
+
+    modalCloseBtn.addEventListener("click", closeWinModal);
+    badLuckCloseBtn.addEventListener("click", closeWinModal);
+    winModal.addEventListener("click", (e) => { if (e.target === winModal) closeWinModal(); });
+
+    continueBtn.addEventListener("click", () => {
+      const offer = getEffectiveOffer();
+      if (offer && offer.offerUrl && offer.offerUrl !== "#") {
+        window.open(offer.offerUrl, "_blank", "noopener,noreferrer");
+      } else {
+        alert("No active Offer URL configured yet.");
+      }
+      if (winModal.classList.contains("open")) closeWinModal();
+    });
+
+    googleFormLink.addEventListener("click", (e) => {
+      const offer = getEffectiveOffer();
+      if (!offer || !offer.googleFormUrl || offer.googleFormUrl === "#") {
+        e.preventDefault();
+        alert("No Google Form link configured for this offer yet.");
       }
     });
 
-    function renderQuestion() {
-      const q = QUESTIONS[currentStep];
-      selectedOption = null;
-
-      // Update Progress & Counter
-      stepCounter.textContent = `${currentStep + 1}/${QUESTIONS.length}`;
-      progressFill.style.width = `${((currentStep + 1) / QUESTIONS.length) * 100}%`;
-
-      // Re-trigger smooth animation
-      questionContainer.classList.remove("question-box");
-      void questionContainer.offsetWidth;
-      questionContainer.classList.add("question-box");
-
-      questionText.textContent = q.text;
-      btnYes.className = "opt-btn";
-      btnNo.className = "opt-btn";
-      passwordWrapper.classList.remove("active");
-      passwordInput.value = "";
-      hideError();
-      nextBtn.classList.remove("show");
-      nextBtn.textContent = currentStep === QUESTIONS.length - 1 ? "VERIFY & FINISH →" : "NEXT →";
-    }
-
-    function selectAnswer(choice) {
-      selectedOption = choice;
-      const q = QUESTIONS[currentStep];
-      hideError();
-
-      if (choice === "YES") {
-        btnYes.classList.add("selected-yes");
-        btnNo.classList.remove("selected-no");
-
-        if (q.requiresPassword) {
-          passwordLabel.textContent = q.passwordLabel;
-          passwordWrapper.classList.add("active");
-          setTimeout(() => passwordInput.focus(), 100);
-        } else {
-          passwordWrapper.classList.remove("active");
-        }
-
-        nextBtn.classList.add("show");
-      } else {
-        btnNo.classList.add("selected-no");
-        btnYes.classList.remove("selected-yes");
-        passwordWrapper.classList.remove("active");
-        nextBtn.classList.add("show");
-      }
-    }
-
-    function handleNext() {
-      if (!selectedOption) return;
-
-      // Agar answer NO hai toh access mat do
-      if (selectedOption === "NO") {
-        showError("Aage badhne ke liye pehle yeh step poora kor lo");
-        return;
-      }
-
-      const q = QUESTIONS[currentStep];
-
-      // Password verification agar zaroori ho
-      if (q.requiresPassword) {
-        const entered = passwordInput.value.trim();
-        const expected = q.passwordType === "comment" ? CONFIG.commentPassword : CONFIG.videoPassword;
-
-        if (!entered) {
-          showError("Kripya aage badhne ke liye password daalein!");
-          passwordInput.focus();
-          return;
-        }
-
-        if (entered !== expected) {
-          let attempts = parseInt(getStorage(CONFIG.storageAttemptsKey) || "0", 10) + 1;
-          setStorage(CONFIG.storageAttemptsKey, attempts);
-
-          if (attempts >= CONFIG.maxWrongAttempts) {
-            const lockUntil = Date.now() + CONFIG.lockDurationMs;
-            setStorage(CONFIG.storageLockKey, lockUntil);
-            showLockScreen(lockUntil);
-            return;
-          } else {
-            const remaining = CONFIG.maxWrongAttempts - attempts;
-            showError(`${q.wrongMessage} (Sirf ${remaining} chance aur bacha hai!)`);
-            passwordInput.value = "";
-            passwordInput.focus();
-            return;
+    function launchGoldenParticles() {
+      const c = document.getElementById("celebration-canvas");
+      const cCtx = c.getContext("2d");
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+      const colors = ["#FFF3C4", "#F3D06B", "#D4AF37", "#FFFFFF", "#9A781C"];
+      const particles = Array.from({ length: 75 }, () => {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 3 + Math.random() * 8;
+        return {
+          x: c.width / 2, y: c.height / 2,
+          vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 3,
+          size: 4 + Math.random() * 6, color: colors[Math.floor(Math.random() * colors.length)],
+          alpha: 1, rotation: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.25
+        };
+      });
+      function render() {
+        cCtx.clearRect(0, 0, c.width, c.height);
+        let alive = false;
+        for (const p of particles) {
+          p.x += p.vx; p.y += p.vy; p.vy += 0.18; p.vx *= 0.985; p.alpha -= 0.012; p.rotation += p.rotSpeed;
+          if (p.alpha > 0) {
+            alive = true;
+            cCtx.save(); cCtx.globalAlpha = Math.max(0, p.alpha);
+            cCtx.translate(p.x, p.y); cCtx.rotate(p.rotation);
+            cCtx.fillStyle = p.color; cCtx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+            cCtx.restore();
           }
         }
+        if (alive) requestAnimationFrame(render);
+        else cCtx.clearRect(0, 0, c.width, c.height);
       }
-
-      // Move to next question or finish
-      if (currentStep < QUESTIONS.length - 1) {
-        currentStep++;
-        renderQuestion();
-      } else {
-        // Sabhi answers YES aur passwords correct
-        removeStorage(CONFIG.storageAttemptsKey);
-        showFinalScreen();
-      }
+      requestAnimationFrame(render);
     }
 
-    function showError(msg) {
-      errorBox.textContent = msg;
-      errorBox.classList.remove("show");
-      void errorBox.offsetWidth;
-      errorBox.classList.add("show");
-    }
+    (async function boot() {
+      await ensureBaseDefaults();
 
-    function hideError() {
-      errorBox.classList.remove("show");
-      errorBox.textContent = "";
-    }
+      onValue(ref(db, "settings/website"), (snap) => {
+        if (snap.exists()) websiteSettings = { ...DEFAULT_WEBSITE_SETTINGS, ...snap.val() };
+        applyWebsiteSettings();
+      });
 
-    // Lock Logic
-    function checkLockState() {
-      const lockUntil = parseInt(getStorage(CONFIG.storageLockKey) || "0", 10);
-      if (lockUntil && lockUntil > Date.now()) {
-        showLockScreen(lockUntil);
-        return true;
-      } else if (lockUntil) {
-        clearLockState();
-      }
-      return false;
-    }
-
-    function clearLockState() {
-      removeStorage(CONFIG.storageLockKey);
-      removeStorage(CONFIG.storageAttemptsKey);
-      if (lockInterval) {
-        clearInterval(lockInterval);
-        lockInterval = null;
-      }
-    }
-
-    function showLockScreen(lockUntil) {
-      surveySection.classList.add("hidden");
-      finalScreen.classList.remove("active");
-      lockScreen.classList.add("active");
-
-      function updateTimer() {
-        const diff = lockUntil - Date.now();
-        if (diff <= 0) {
-          clearLockState();
-          lockScreen.classList.remove("active");
-          surveySection.classList.remove("hidden");
-          renderQuestion();
-          return;
+      onValue(ref(db, "spinSettings"), (snap) => {
+        if (snap.exists()) {
+          const val = snap.val();
+          dailySpinLimit = Math.max(1, Number(val.dailySpinLimit) || 1);
+          const rawPrizes = val.prizes ? (Array.isArray(val.prizes) ? val.prizes : Object.values(val.prizes)) : DEFAULT_PRIZES;
+          allPrizes = rawPrizes;
+          enabledPrizes = rawPrizes.filter(p => p && p.enabled !== false);
+          drawWheel(currentRotation);
+          if (currentUser) updateSpinControlsUI();
         }
-        const totalSeconds = Math.ceil(diff / 1000);
-        const mins = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
-        const secs = String(totalSeconds % 60).padStart(2, "0");
-        countdownTimer.textContent = `${mins}:${secs}`;
-      }
+      });
 
-      updateTimer();
-      if (lockInterval) clearInterval(lockInterval);
-      lockInterval = setInterval(updateTimer, 1000);
-    }
+      onValue(ref(db, "offers"), (snap) => {
+        offersMap = snap.exists() ? snap.val() : {};
+        if (currentUser) updateActiveOfferUI();
+      });
 
-    // Final Screen & Confetti Celebration
-    function showFinalScreen() {
-      surveySection.classList.add("hidden");
-      lockScreen.classList.remove("active");
-      finalScreen.classList.add("active");
-      launchConfetti();
-    }
-
-    function launchConfetti() {
-      const canvas = document.getElementById("confetti-canvas");
-      const ctx = canvas.getContext("2d");
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-
-      const colors = ["#7c3aed", "#ec4899", "#10b981", "#f59e0b", "#38bdf8"];
-      const particles = Array.from({ length: 90 }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height - canvas.height,
-        w: Math.random() * 8 + 5,
-        h: Math.random() * 5 + 4,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        speedY: Math.random() * 3 + 2,
-        speedX: Math.random() * 2 - 1,
-        angle: Math.random() * 360
-      }));
-
-      let frames = 0;
-      function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach((p) => {
-          p.y += p.speedY;
-          p.x += p.speedX;
-          p.angle += 4;
-
-          ctx.save();
-          ctx.translate(p.x, p.y);
-          ctx.rotate((p.angle * Math.PI) / 180);
-          ctx.fillStyle = p.color;
-          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-          ctx.restore();
-
-          if (p.y > canvas.height) {
-            p.y = -10;
-            p.x = Math.random() * canvas.width;
-          }
-        });
-        frames++;
-        if (frames < 260) {
-          requestAnimationFrame(draw);
-        } else {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-      }
-      draw();
-    }
-
-    init();
+      await initUserSession();
+    })();
   </script>
 </body>
 </html>
